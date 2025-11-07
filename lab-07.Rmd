@@ -25,46 +25,62 @@ evals<-read.csv("data/evals.csv", row.names=1)
 
 ```{r viz-score}
 # add code here
+evals %>% 
+  ggplot(aes(x = score)) + 
+  geom_histogram()
+
+summarise(evals, mean(score))
+summarise(evals, median(score))
 ```
 
 *Add your other details and narratives here.*
+The graph is skewed to the right which would suggest that the median is lower than the mean. This is true mean = 4.17473 and median = 4.3. Students tend to rate courses quite highly with lower scores being outlyers.
 
 2.  Visualize and describe the relationship between `score` and `bty_avg` using `geom_point()` to represent the data. 
 
 ```{r scatterplot}
 # add code here
+evals %>% ggplot(aes(x = bty_avg, y = score)) +
+  geom_jitter()
 ```
 
 *Add your narrative and other details here.*
+Jitter makes all the points that were overlapping to be visable. The old graph will less representative of the actually data because not all data can be seen.
 
 # Exercise 2: Simple Linear regression with a numerical predictor
 
 1. Fit a linear model called `score_bty_fit` to predict average professor evaluation `score` from average beauty rating (`bty_avg`). Print the regression output using `tidy()`.
 
-```{r fit-score_bty_fit, eval = FALSE}
+
+```{r fit-score_bty_fit}
 # remove eval = FALSE from the code chunk options after filling in the blanks
 score_bty_fit <- linear_reg() %>%
   set_engine("lm") %>%
-  fit(___ ~ ___, data = ___)
+  fit(score ~ bty_avg, data = evals)
 ```
 
 ```{r tidy-score_bty_fit, eval = FALSE}
 # remove eval = FALSE from the code chunk options after filling in the blanks
-tidy(___)
+tidy(score_bty_fit)
 ```
 
 *Add your linear model here. Don't worry too much about notation, you can use things like score-hat.*
+
+score = 3.88033795 + 0.06663704 * bty_avg
 
 2. Plot the data again using `geom_jitter()`, and add the regression line.
 
 ```{r viz-score_bty_fit,eval=FALSE}
 # add your plot here. Hint, you can add the regression line using geom_smooth()
+evals %>% ggplot(aes(x = bty_avg, y = score)) +
+  geom_jitter() +
+  geom_smooth(method = "lm")
 ```
 
 3. Interpret the slope of the linear model in context of the data.
 
 *Add your interpretation here*
-
+The slope suggests that the 
 4. Interpret the intercept of the linear model in context of the data. Comment on whether or not the intercept makes sense in this context.
 
 *Add your interpretation here*
@@ -73,7 +89,7 @@ tidy(___)
 
 ```{r R2, eval = FALSE}
 # remove eval = FALSE from the code chunk options after filling in the blanks
-glance(___)$___
+glance(score_bty_fit)$r.squared
 ```
 
 *Add your interpretation here*
